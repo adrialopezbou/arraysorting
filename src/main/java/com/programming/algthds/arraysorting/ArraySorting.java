@@ -16,8 +16,7 @@ public class ArraySorting {
         int[] bubbleSortArray = array.clone();
         int[] mergeSortArray = array.clone();
         int[] quickSortArray = array.clone();
-        //System.out.println("Unsorted array: " + Arrays.toString(array));
-        //System.out.println("Sorted array: " + Arrays.toString(array));
+        int[] heapSortArray = array.clone();
 
         System.out.println("Execution Times:");
 
@@ -46,6 +45,10 @@ public class ArraySorting {
         endTime = System.nanoTime();
         System.out.println("Quick sort: " + (endTime - startTime) / 1000 + " ms");
 
+        startTime = System.nanoTime();
+        heapSort(heapSortArray);
+        endTime = System.nanoTime();
+        System.out.println("Heap sort: " + (endTime - startTime) / 1000 + " ms");
     }
 
     public static void selectionSort(int[] array) {
@@ -147,6 +150,46 @@ public class ArraySorting {
         // Swapping pivot with the first element of greater elements than pivot
         swap(array, leftWall, high);
         return leftWall;
+    }
+
+    public static void heapSort(int[] array) {
+        // Max Heap for ascending order
+        createMaxHeap(array);
+        sortArray(array);
+    }
+
+    private static void createMaxHeap(int[] array) {
+        // Heapify only the non-leaf nodes in reverse order
+        for(int i = (array.length/2) - 1; i >= 0; i--) {
+            heapify(array, array.length, i);
+        }
+    }
+
+    private static void sortArray(int[] array) {
+        // Swap root with last node, and heapify deleting the last node in each iteration
+        for(int i = array.length - 1; i > 0; i--) {
+            swap(array, 0, i);
+            heapify(array, i, 0);
+        }
+    }
+
+    private static void heapify(int[] array, int end, int index) {
+        int leftChildIndex = 2 * index + 1;
+        int rightChildIndex = 2 * index + 2;
+        int largest = index;
+
+        if (leftChildIndex < end && array[largest] < array[leftChildIndex]) {
+            largest = leftChildIndex;
+        }
+
+        if (rightChildIndex < end && array[largest] < array[rightChildIndex]) {
+            largest = rightChildIndex;
+        }
+
+        if(largest != index) {
+            swap(array, index, largest);
+            heapify(array, end, largest);
+        }
     }
 
     private static void swap(int[] array, int i, int j) {
